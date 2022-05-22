@@ -26,45 +26,45 @@ public class Enemy extends GameObject {
 		}
 
 	public void tick() {
-		
-		x+=velX;
-		y+=velY;
-		
-		choose=r.nextInt(10);
-	
-		for(int i=0;i<handler.object.size();i++) {
-			GameObject tempObject = handler.object.get(i);
+		if (Game.getState() != Game.STATE.STOP && Game.getPrev_state() != Game.STATE.STOP) {
+			x+=velX;
+			y+=velY;
 			
-			if(tempObject.getId() == ID.Block) {
+			choose=r.nextInt(10);
+		
+			for(int i=0;i<handler.object.size();i++) {
+				GameObject tempObject = handler.object.get(i);
 				
-				if(getBoundsBig().intersects(tempObject.getBounds())) {
-					x+=(velX*1) * -1;
-					y+=(velY*1) * -1;
-					velX*=-1;
-					velY*=-1;
-				}
-				else if(choose==0) {
+				if(tempObject.getId() == ID.Block) {
 					
-					velX=(r.nextInt(4 - -4) + -4);
-					velY=(r.nextInt(4 - -4) + -4);
-				}
-			}
-		
-				if(tempObject.getId() == ID.Bullet) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						hp-=50;
-						handler.removeObject(tempObject);
+					if(getBoundsBig().intersects(tempObject.getBounds())) {
+						x+=(velX*1) * -1;
+						y+=(velY*1) * -1;
+						velX*=-1;
+						velY*=-1;
 					}
-					
+					else if(choose==0) {
+						
+						velX=(r.nextInt(4 - -4) + -4);
+						velY=(r.nextInt(4 - -4) + -4);
+					}
 				}
+			
+					if(tempObject.getId() == ID.Bullet) {
+						if(getBounds().intersects(tempObject.getBounds())) {
+							hp-=50;
+							handler.removeObject(tempObject);
+						}
+						
+					}
+			}
+			
+			anim.runAnimation();
+			if(hp<=0) {
+				Game.audio.getSound("goblin_death").play();
+				handler.removeObject(this);
+			}
 		}
-		
-		anim.runAnimation();
-		if(hp<=0) {
-			Game.audio.getSound("goblin_death").play();
-			handler.removeObject(this);
-		}
-		
 	}
 
 	public void render(Graphics g) {

@@ -6,7 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="res"/>
 	<classpathentry kind="lib" path="/Users/tolga.inkaya/Downloads/Libs/jars/jinput.jar"/>
 	<classpathentry kind="lib" path="/Users/tolga.inkaya/Downloads/Libs/jars/jogg-0.0.7.jar"/>
 	<classpathentry kind="lib" path="/Users/tolga.inkaya/Downloads/Libs/jars/jorbis-0.0.15.jar"/>
@@ -16,5 +15,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/tolga.inkaya/Downloads/Libs/jars/slick.jar"/>
+	<classpathentry kind="lib" path="/Users/tolga.inkaya/Downloads/Libs/lwjgl/native/macosx"/>
+	<classpathentry kind="lib" path="res"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

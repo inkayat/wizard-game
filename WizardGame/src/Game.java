@@ -16,7 +16,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int WIDTH = 612;
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 2;
-	public boolean isRunning = false;
+	public static boolean isRunning = false;
 	public static boolean isStart = false;
 	private Thread thread;
 	private Handler handler;
@@ -40,7 +40,10 @@ public class Game extends Canvas implements Runnable{
 		MENU,
 		GAME,
 		SETTINGS,
-		DIFFICULTY
+		DIFFICULTY,
+		DEATH,
+		RESTART,
+		STOP
 	}
 	
 	public static enum DIFFICULTY{
@@ -49,6 +52,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	private static STATE State = STATE.MENU;
+	private static STATE prev_state = STATE.MENU;
 	private static DIFFICULTY difficulty = DIFFICULTY.EASY;
 	
 	
@@ -95,6 +99,27 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 	}
+	
+	public void restart() {
+		hp = 100;
+		ammo = 100;
+		
+		handler = new Handler();
+		camera= new Camera(0,0);
+		
+		this.addKeyListener(new KeyInput (handler));
+		
+		
+		BufferedImageLoader loader =new BufferedImageLoader();
+		level=loader.loadImage("/gamemap1_1.png");
+		
+		sprite_sheet = loader.loadImage("/sprite_sheet.png");
+		ss=new SpriteSheet(sprite_sheet);
+		floor=ss.grabImage(4, 2, 32, 32);		
+		this.addMouseListener(new MouseInput(handler,camera,this,ss) );
+		loadLevel(level);
+	}
+	
 	public void run() {
 		this.requestFocus();
 		  long lastTime = System.nanoTime();
@@ -104,13 +129,13 @@ public class Game extends Canvas implements Runnable{
 		  long timer = System.currentTimeMillis();
 		  int frames = 0;
 		  while (isRunning) {
-		   long now = System.nanoTime();
-		   delta += (now - lastTime) /ns;
-		   lastTime = now;
+			  long now = System.nanoTime();
+			  delta += (now - lastTime) /ns;
+			  lastTime = now;
 		   while(delta >= 1) {
-		    tick();
-		    //updates++;
-		    delta--;
+			   tick();
+			   //updates++;
+			   delta--;
 		   }
 		   render();
 		   frames++;
@@ -122,7 +147,6 @@ public class Game extends Canvas implements Runnable{
 		   }
 		  }
 		  stop();
-		
 	}
 	
 	public void tick() {
@@ -140,6 +164,9 @@ public class Game extends Canvas implements Runnable{
 					camera.tick(handler.object.get(i));	
 				}	
 			}
+		}else if(getState() == STATE.RESTART) {
+			restart();
+			setState(STATE.GAME);
 		}
 		handler.tick();
 	}
@@ -185,7 +212,7 @@ public class Game extends Canvas implements Runnable{
 	
 		//loading the level
 	private void loadLevel(BufferedImage image) {
-		if (getState() == Game.STATE.GAME) {
+		if (getState() == Game.STATE.GAME || getState() == Game.STATE.RESTART) {
 			int w=image.getWidth();
 			int h=image.getHeight();
 			
@@ -207,9 +234,7 @@ public class Game extends Canvas implements Runnable{
 						handler.addObject(new Create(xx*32,yy*32,ID.Create, ss));
 					}
 				}
-		
 		}
-		
 	}
 	
 	public static void main(String args[]) throws SlickException {
@@ -231,6 +256,14 @@ public class Game extends Canvas implements Runnable{
 
 	public static void setDifficulty(DIFFICULTY difficulty) {
 		Game.difficulty = difficulty;
+	}
+
+	public static STATE getPrev_state() {
+		return prev_state;
+	}
+
+	public static void setPrev_state(STATE prev_state) {
+		Game.prev_state = prev_state;
 	}	
 
 

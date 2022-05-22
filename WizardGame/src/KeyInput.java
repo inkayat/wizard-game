@@ -17,7 +17,8 @@ public class KeyInput extends KeyAdapter {
 			int key=e.getKeyCode();
 			
 			if(Game.getState() == Game.STATE.GAME && key == KeyEvent.VK_ESCAPE) {
-				Game.setState(Game.STATE.MENU);
+				Game.setState(Game.STATE.STOP);
+				Game.setPrev_state(Game.STATE.STOP);
 			}
 
 			

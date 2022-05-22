@@ -20,21 +20,23 @@ public class Bullet  extends GameObject{
 
 
 	public void tick(){ 
-		x+=velX;
-		y+=velY;
-	
-		for(int i=0;i<handler.object.size();i++) {
-			GameObject tempObject = handler.object.get(i);
-			
-			if(tempObject.getId() == ID.Block) {
-				if(getBounds().intersects(tempObject.getBounds())) {
-					handler.removeObject(this);
+		if (Game.getState() != Game.STATE.STOP && Game.getPrev_state() != Game.STATE.STOP) {
+		
+			x+=velX;
+			y+=velY;
+		
+			for(int i=0;i<handler.object.size();i++) {
+				GameObject tempObject = handler.object.get(i);
+				
+				if(tempObject.getId() == ID.Block) {
+					if(getBounds().intersects(tempObject.getBounds())) {
+						handler.removeObject(this);
+						
+					}
 					
 				}
-				
 			}
-		}
-	
+		}	
 	}
 
 
